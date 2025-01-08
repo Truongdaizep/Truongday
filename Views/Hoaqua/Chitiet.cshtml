@@ -1,8 +1,9 @@
 @model NETCORE.Models.Hoaqua
 
 @{
-    Layout = null; <!-- Không sử dụng layout -->
-  var anotherModel = ViewData["AnotherModel"] as NETCORE.Models.CartItem;
+    Layout = null;
+    <!-- Không sử dụng layout -->
+    var anotherModel = ViewData["AnotherModel"] as NETCORE.Models.CartItem;
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -12,7 +13,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!--    , maximum-scale=1.0-->
-     <title>@ViewData["Title"] - NETCORE..</title><meta name="keywords" content="">
+     <title>@ViewData["Title"] - NETCORE</title><meta name="keywords" content="">
 <meta name="description" content="">
   <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/btn.css" asp-append-version="true" />
@@ -31,17 +32,17 @@
 <script src="https://web.nvnstatic.net/js/lazyLoad/lazysizes.min.js" async=""></script>
     </style>
 <body id="lama-theme" class="tp_background tp_text_color">  
-  @* mobile_child ---------------------------------------------  *@
-   @(await Component.InvokeAsync("NavMobile"))
-@* -----------end mobile_child ------------ *@
+    @* mobile_child ---------------------------------------------  *@
+    @(await Component.InvokeAsync("NavMobile"))
+    @* -----------end mobile_child ------------ *@
             <div class="container top-header d-none d-lg-flex flex-wrap">
                 <div class="col-md-2 lare-logo">
                     <a href="/" class="d-inline-block">
                         <img src="https://pos.nvncdn.com/16a837-71503/store/20200325_7rMt2KlqTHJrITcloxlSka0u.png" alt="Logo">
                     </a>  
                 <!-- #region    --> </div>
-            @(await Component.InvokeAsync("Navbar"))
-            
+        @(await Component.InvokeAsync("Navbar"))
+
             </div>
         </div>
     </header>
@@ -49,7 +50,7 @@
 
 <div class="container tp_product_detail">
     <div class="row">
-    
+
         <!-- Image Section -->
         <div class="col-12 col-sm-6 col-md-6 col-lg-6">
             <div class="img-main">
@@ -97,7 +98,7 @@
            <div class="price_box">
 
                 <span class="prices">
-                    <span class="price tp_product_detail_price">@Model.Price USD</span>             
+                    <span class="price tp_product_detail_price">@Model.Price.ToString("#,0") VND</span>
                </span>
             </div>
             <div class="rte text4line">
@@ -108,10 +109,10 @@
                 <select name="variantId" class="hidden" style="display:none"></select>
                 <div class="clearfix"></div>
                 <div class="quantity_wanted_p">
-                
+
                     <div class="input_qty_qv">
                         <span> Số lượng : </span>
-                    
+
                   <input type="button" class="button minus" value="-">
 <input class="updateCart quantity" type="number" name="quantity" value="1" data-id="37601636" pattern="\d*" min="1" max="5000">
 <input type="button" class="button plus" value="+">
@@ -130,7 +131,7 @@
             </div>
         </div>
 
- 
+
         <!-- Banner Section -->
         <div class="col-12 mg-top">
             <a href="javascript:void(0);">
@@ -373,5 +374,4 @@
 
 
 
-   @(await Component.InvokeAsync("Footer"))
-   
+@(await Component.InvokeAsync("Footer"))
