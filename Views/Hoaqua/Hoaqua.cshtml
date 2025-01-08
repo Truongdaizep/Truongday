@@ -1,8 +1,7 @@
 @model IEnumerable<NETCORE.Models.Hoaqua>
 
 @{
-    Layout = null;
-    <!-- Không sử dụng layout -->
+    ViewData["Title"] = "Product";
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -13,7 +12,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!--    , maximum-scale=1.0-->
-    <title>@ViewData["Title"] - NETCORE..</title>
+    <title>@ViewData["Title"] - NETCORE</title>
     <meta name="keywords" content="">
     <meta name="description" content="">
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
@@ -171,7 +170,7 @@
         <div class="col-6 col-md-4 col-lg-3 product_item container ">
             <div class="card ">
                 <!-- Hình ảnh -->
-                <img src="@hoaquas.ImageUrl" class="card-img-top" alt="Image of @hoaquas.Title"
+                <img src="~/@hoaquas.ImageUrl" class="card-img-top" alt="Image of @hoaquas.Title"
                     style="height: 200px; object-fit: cover;">
 
                 <div class="card-body ">
