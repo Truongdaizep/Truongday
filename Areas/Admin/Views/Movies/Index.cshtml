@@ -1,37 +1,104 @@
-@model IEnumerable<NETCORE.Models.Hoaqua>
+@model PaginatedList<NETCORE.Models.Hoaqua>
 
 @{
     ViewData["Title"] = "Index";
 }
 
 <style>
+    .pagination-container {
+        @* position: fixed; *@
+    }
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        /* Canh giữa nội dung */
+        list-style: none;
+        /* Loại bỏ dấu chấm đầu dòng */
+        margin-top: 20px;
+        /* Thêm khoảng cách phía trên thanh phân trang */
+        justify-content: center;
+        padding: 0;
+    }
+
+    .pagination .page-item {
+        margin: 0 5px;
+        /* Tạo khoảng cách giữa các mục */
+    }
+
+    .pagination .page-item .page-link {
+        border-radius: 5px;
+        /* Bo góc nhẹ cho nút */
+        padding: 5px 10px;
+        text-decoration: none;
+        color: #007bff;
+        /* Màu xanh cho liên kết */
+        border: 1px solid #dee2e6;
+        background-color: #fff;
+        /* Màu nền trắng */
+    }
+
+    .pagination .page-item.active .page-link {
+        color: #fff;
+        /* Màu chữ */
+        background-color: #007bff;
+        /* Nền xanh khi được chọn */
+        border-color: #007bff;
+        /* Viền xanh khi được chọn */
+    }
+
+    .pagination .page-link:hover {
+        color: #0056b3;
+        /* Màu xanh đậm hơn khi hover */
+        background-color: #e9ecef;
+        /* Nền xám nhạt khi hover */
+    }
+
     .custom-bg {
         background-color: #f0f8ff;
-        /* Màu xanh nhạt */
+    }
+
+    .table {
+        margin-bottom: 20px;
+        /* Thêm khoảng cách dưới bảng sản phẩm */
+    }
+
+    .pagination-container {
+        margin-top: 30px;
+        /* Thêm khoảng cách trên phân trang */
+    }
+
+    .pagination {
+        justify-content: center;
+        /* Canh giữa phân trang */
     }
 
     .table th,
     .table td {
         vertical-align: middle;
         text-align: center;
-        /* Căn giữa nội dung */
     }
 
     .no-underline {
         text-decoration: none;
-        color: inherit;
+        background-color: rgb(50, 50, 139);
+        color: white;
+        padding: 4px 10px;
+        border-radius: 20px;
     }
 
     .no-underline:hover {
-        color: rgb(255, 0, 0);
+        opacity: 0.8;
         text-align: center;
     }
 </style>
-<h1>Danh sách sản phẩm </h1>
+
+<h1>Danh sách sản phẩm</h1>
 
 <p>
     <a asp-action="Create" class="no-underline">Thêm sản phẩm</a>
 </p>
+
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
@@ -41,26 +108,24 @@
 <table class="table table-striped table-hover custom-bg">
     <thead>
         <tr>
-            <th>@Html.DisplayNameFor(model => model.Title)</th>
-            <th>@Html.DisplayNameFor(model => model.Genre)</th>
-            <th>@Html.DisplayNameFor(model => model.Price)</th>
-            <th>@Html.DisplayNameFor(model => model.ImageUrl)</th>
-            <th>Actions</th>
+            <th>Tiêu đề</th>
+            <th>Thể loại</th>
+            <th>Giá</th>
+            <th>Ảnh</th>
+            <th>Hành động</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
             <tr>
-                <td>@Html.DisplayFor(modelItem => item.Title)</td>
-                <td>@Html.DisplayFor(modelItem => item.Genre)</td>
-                <td>@Html.DisplayFor(modelItem => item.Price)</td>
-
+                <td>@item.Title</td>
+                <td>@item.Genre</td>
+                <td>@item.Price.ToString("C")</td>
                 <td>
-                    <!-- Hiển thị ảnh sản phẩm -->
                     @if (!string.IsNullOrEmpty(item.ImageUrl))
                     {
-                        <img style="object-fit: cover;" src="~/@item.ImageUrl" alt="" width="80" height="100" />
+                        <img style="object-fit: cover;" src="~/@item.ImageUrl" alt="Ảnh" width="100" height="80" />
                     }
                     else
                     {
@@ -76,3 +141,30 @@
         }
     </tbody>
 </table>
+
+<footer class="pagination-container">
+    <nav>
+        <ul class="pagination justify-content-center">
+            @if (Model.HasPreviousPage)
+            {
+                <li class="page-item">
+                    <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.PageIndex - 1)">Trước</a>
+                </li>
+            }
+
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(i == Model.PageIndex ? "active" : "")">
+                    <a class="page-link" asp-action="Index" asp-route-pageNumber="@i">@i</a>
+                </li>
+            }
+
+            @if (Model.HasNextPage)
+            {
+                <li class="page-item">
+                    <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.PageIndex + 1)">Sau</a>
+                </li>
+            }
+        </ul>
+    </nav>
+</footer>

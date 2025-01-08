@@ -33,7 +33,7 @@
                 @if (!string.IsNullOrEmpty(Model.ImageUrl))
                 {
                     <div>
-                        <img src="@Model.ImageUrl" alt="Current Image" name="image" style="max-width: 200px; max-height: 200px;" />
+                        <img src="~/@Model.ImageUrl" alt="Image" name="image" style="max-width: 200px; max-height: 200px;" />
                     </div>
                 }
                 <input type="file" asp-for="ImageUrl" class="form-control" />
