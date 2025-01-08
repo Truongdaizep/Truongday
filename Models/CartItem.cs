@@ -5,10 +5,10 @@ namespace NETCORE.Models;
 public class CartItem
 {
     public int Id { get; set; }
-    public string Title { get; set; }
+    public string? Title { get; set; }
     
-    public string Genre { get; set; }
+    public string? Genre { get; set; }
     public decimal Price { get; set; }
-    public string ImageUrl { get; set; }
+    public string? ImageUrl { get; set; }
     public int Quantity { get; set; }  // Số lượng sản phẩm trong giỏ hàng
 }
