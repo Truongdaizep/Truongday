@@ -49,19 +49,54 @@ namespace NETCORE.Areas.Admin.Controllers
             return View();
         }
 
-        // POST: Movies/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Genre,Price,ImageUrl")] Hoaqua hoaqua)
+        public async Task<IActionResult> Create([Bind("Id,Title,Genre,Price,ImageUrl")] Hoaqua hoaqua, IFormFile image)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
+                return View(hoaqua);
+            }
+
+            try
+            {
+                // Kiểm tra nếu có file ảnh được tải lên
+                if (image != null && image.Length > 0)
+                {
+                    // Đường dẫn thư mục lưu trữ ảnh
+                    var uploadDir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img");
+
+                    // Tạo thư mục nếu chưa tồn tại
+                    if (!Directory.Exists(uploadDir))
+                    {
+                        Directory.CreateDirectory(uploadDir);
+                    }
+
+                    // Tạo tên file duy nhất để tránh trùng lặp
+                    var fileName = Guid.NewGuid().ToString() + Path.GetExtension(image.FileName);
+                    var filePath = Path.Combine(uploadDir, fileName);
+
+                    // Lưu file ảnh vào thư mục đích
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await image.CopyToAsync(fileStream);
+                    }
+
+                    // Lưu đường dẫn tương đối vào database
+                    hoaqua.ImageUrl = Path.Combine("img", fileName);
+                }
+
+                // Thêm sản phẩm vào database
                 _context.Add(hoaqua);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            catch (Exception ex)
+            {
+                // Ghi log nếu cần thiết
+                ModelState.AddModelError("", $"Có lỗi xảy ra: {ex.Message}");
+            }
+
             return View(hoaqua);
         }
 
