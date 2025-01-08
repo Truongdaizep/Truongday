@@ -1,11 +1,18 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using NETCORE.Services;
+using NETCORE.Utils.ConfigOptions;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<MvcMovieContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("MvcMovieContext") ?? throw new InvalidOperationException("Connection string 'MvcMovieContext' not found.")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("MvcMovieContext") ?? throw new InvalidOperationException("Connection string 'MvcMovieContext' not found.")));
 
-
+builder.Services.AddSingleton<IVnPayService, VnPayService>();
+builder.Services.Configure<GoogleCloudStorageConfigOptions>(
+    builder.Configuration.GetSection("GoogleCloudStorage"));
+builder.Services.Configure<VnPayConfigOptions>(
+    builder.Configuration.GetSection("VnPay"));
+builder.Services.AddSingleton<ICloudStorageService, CloudStorageService>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -39,7 +46,7 @@ app.MapControllerRoute(
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Hoaqua}/{action=Hoaqua}/{id?}")
+    pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
 
 
