@@ -20,9 +20,15 @@ namespace NETCORE.Areas.Admin.Controllers
         }
 
         // GET: Movies
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? pageNumber)
         {
-            return View(await _context.Hoaqua.ToListAsync());
+            int pageSize = 5; // Số lượng sản phẩm trên mỗi trang
+
+            // Lấy danh sách sản phẩm từ cơ sở dữ liệu
+            var hoaqua = _context.Hoaqua.AsQueryable();
+
+            // Trả về danh sách được phân trang
+            return View(await PaginatedList<Hoaqua>.CreateAsync(hoaqua, pageNumber ?? 1, pageSize));
         }
 
         // GET: Movies/Details/5
@@ -116,9 +122,7 @@ namespace NETCORE.Areas.Admin.Controllers
             return View(hoaqua);
         }
 
-        // POST: Movies/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Genre,Price,ImageUrl")] Hoaqua hoaqua)
