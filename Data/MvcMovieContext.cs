@@ -5,12 +5,12 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using NETCORE.Models;
 
-    public class MvcMovieContext : DbContext
+public class MvcMovieContext : DbContext
+{
+    public MvcMovieContext(DbContextOptions<MvcMovieContext> options)
+        : base(options)
     {
-        public MvcMovieContext (DbContextOptions<MvcMovieContext> options)
-            : base(options)
-        {
-        }
-
-        public DbSet<NETCORE.Models.Hoaqua> Hoaqua { get; set; } = default!;
     }
+
+    public DbSet<NETCORE.Models.Hoaqua> Hoaqua { get; set; } = default!;
+}

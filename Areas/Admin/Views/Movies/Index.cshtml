@@ -46,7 +46,15 @@
                 <td>@Html.DisplayFor(modelItem => item.Title)</td>
                 <td>@Html.DisplayFor(modelItem => item.Genre)</td>
                 <td>@Html.DisplayFor(modelItem => item.Price)</td>
-                <td><img src="@item.ImageUrl" alt="@item.Title" style="width: 50px; height: 50px;"></td>
+                <td>@if (!string.IsNullOrEmpty(item.ImageUrl))
+                    {
+                        <img src="@Url.Content(item.ImageUrl)" alt="@item.Title" style="width: 50px; height: 50px;" />
+                    }
+                    else
+                    {
+                        <span>No image</span>
+                    }
+                </td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary btn-sm">Edit</a>
                     <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info btn-sm">Details</a>
