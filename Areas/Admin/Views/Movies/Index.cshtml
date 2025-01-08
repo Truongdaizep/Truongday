@@ -6,28 +6,36 @@
 
 <style>
     .custom-bg {
-        background-color: #f0f8ff; /* Màu xanh nhạt */
+        background-color: #f0f8ff;
+        /* Màu xanh nhạt */
     }
-    .table th, .table td {
+
+    .table th,
+    .table td {
         vertical-align: middle;
-        text-align: center; /* Căn giữa nội dung */
+        text-align: center;
+        /* Căn giữa nội dung */
     }
-     .no-underline {
+
+    .no-underline {
         text-decoration: none;
         color: inherit;
     }
-    .no-underline:hover{
+
+    .no-underline:hover {
         color: rgb(255, 0, 0);
         text-align: center;
     }
 </style>
 <h1>Danh sách sản phẩm </h1>
 
-<p >
+<p>
     <a asp-action="Create" class="no-underline">Thêm sản phẩm</a>
 </p>
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
 
 <table class="table table-striped table-hover custom-bg">
@@ -41,14 +49,18 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model) {
+        @foreach (var item in Model)
+        {
             <tr>
                 <td>@Html.DisplayFor(modelItem => item.Title)</td>
                 <td>@Html.DisplayFor(modelItem => item.Genre)</td>
                 <td>@Html.DisplayFor(modelItem => item.Price)</td>
-                <td>@if (!string.IsNullOrEmpty(item.ImageUrl))
+
+                <td>
+                    <!-- Hiển thị ảnh sản phẩm -->
+                    @if (!string.IsNullOrEmpty(item.ImageUrl))
                     {
-                        <img src="@Url.Content(item.ImageUrl)" alt="@item.Title" style="width: 50px; height: 50px;" />
+                        <img style="object-fit: cover;" src="~/@item.ImageUrl" alt="" width="80" height="100" />
                     }
                     else
                     {
