@@ -1,0 +1,58 @@
+@model IEnumerable<NETCORE.Models.Hoaqua>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<style>
+    .custom-bg {
+        background-color: #f0f8ff; /* Màu xanh nhạt */
+    }
+    .table th, .table td {
+        vertical-align: middle;
+        text-align: center; /* Căn giữa nội dung */
+    }
+     .no-underline {
+        text-decoration: none;
+        color: inherit;
+    }
+    .no-underline:hover{
+        color: rgb(255, 0, 0);
+        text-align: center;
+    }
+</style>
+<h1>Danh sách sản phẩm </h1>
+
+<p >
+    <a asp-action="Create" class="no-underline">Thêm sản phẩm</a>
+</p>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+<table class="table table-striped table-hover custom-bg">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.Title)</th>
+            <th>@Html.DisplayNameFor(model => model.Genre)</th>
+            <th>@Html.DisplayNameFor(model => model.Price)</th>
+            <th>@Html.DisplayNameFor(model => model.ImageUrl)</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model) {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.Title)</td>
+                <td>@Html.DisplayFor(modelItem => item.Genre)</td>
+                <td>@Html.DisplayFor(modelItem => item.Price)</td>
+                <td><img src="@item.ImageUrl" alt="@item.Title" style="width: 50px; height: 50px;"></td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary btn-sm">Edit</a>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info btn-sm">Details</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
