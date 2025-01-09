@@ -125,7 +125,7 @@ namespace NETCORE.Areas.Admin.Controllers
         
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Genre,Price,ImageUrl")] Hoaqua hoaqua)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Genre,Price,ImageUrl")] Hoaqua hoaqua, IFormFile ImageFile)
         {
             if (id != hoaqua.Id)
             {
@@ -136,6 +136,34 @@ namespace NETCORE.Areas.Admin.Controllers
             {
                 try
                 {
+                    // Kiểm tra nếu không có file
+                    if (ImageFile == null || ImageFile.Length == 0)
+                    {
+                        ModelState.AddModelError("ImageFile", "Please upload an image.");
+                    }
+
+                    // Nếu có file, xử lý upload
+                    if (ImageFile != null && ImageFile.Length > 0)
+                    {
+                        var fileName = Path.GetFileName(ImageFile.FileName);
+                        var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img");
+                        var filePath = Path.Combine(uploadsFolder, fileName);
+
+                        // Tạo thư mục nếu chưa có
+                        if (!Directory.Exists(uploadsFolder))
+                        {
+                            Directory.CreateDirectory(uploadsFolder);
+                        }
+
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await ImageFile.CopyToAsync(stream);
+                        }
+
+                        // Cập nhật đường dẫn ảnh vào model
+                        hoaqua.ImageUrl = "img/" + fileName;
+                    }
+
                     _context.Update(hoaqua);
                     await _context.SaveChangesAsync();
                 }
@@ -152,6 +180,10 @@ namespace NETCORE.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+
+            // Chuyển lỗi sang ViewData nếu có lỗi từ ModelState
+            ViewData["ImageFileError"] = ModelState["ImageFile"]?.Errors.FirstOrDefault()?.ErrorMessage;
+
             return View(hoaqua);
         }
 

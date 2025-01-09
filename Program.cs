@@ -8,14 +8,20 @@ builder.Services.AddDbContext<MvcMovieContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("MvcMovieContext") ?? throw new InvalidOperationException("Connection string 'MvcMovieContext' not found.")));
 
 builder.Services.AddSingleton<IVnPayService, VnPayService>();
+
 builder.Services.Configure<GoogleCloudStorageConfigOptions>(
     builder.Configuration.GetSection("GoogleCloudStorage"));
+
 builder.Services.Configure<VnPayConfigOptions>(
     builder.Configuration.GetSection("VnPay"));
+
 builder.Services.AddSingleton<ICloudStorageService, CloudStorageService>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+// builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
 builder.Services.AddSession(options =>
 {
     options.Cookie.Name = ".YourApp.Session";
@@ -23,6 +29,7 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true; // Thiết lập Cookie này là thiết yếu
 });
 var app = builder.Build();
+
 
 
 // Configure the HTTP request pipeline.

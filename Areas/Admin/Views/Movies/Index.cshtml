@@ -121,11 +121,11 @@
             <tr>
                 <td>@item.Title</td>
                 <td>@item.Genre</td>
-                <td>@item.Price.ToString("C")</td>
+                <td>@item.Price.ToString("#,0") VND</td>
                 <td>
                     @if (!string.IsNullOrEmpty(item.ImageUrl))
                     {
-                        <img style="object-fit: cover;" src="~/@item.ImageUrl" alt="Ảnh" width="100" height="80" />
+                        <img style="object-fit: cover;" src="~/@item.ImageUrl" alt="Image" width="100" height="80" />
                     }
                     else
                     {
