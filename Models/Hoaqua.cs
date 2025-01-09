@@ -13,4 +13,6 @@ public class Hoaqua
     public decimal Price { get; set; }
     public string? ImageUrl { get; set; }
 
+    // public ICollection<CartItem> CartItem { get; set; }
+
 }

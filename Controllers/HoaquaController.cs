@@ -43,13 +43,8 @@ public class HoaquaController : Controller
         {
             return NotFound(); // Trả về 404 nếu không tìm thấy sản phẩm
         }
-
-        // Trả về view với đối tượng hoaqua (1 sản phẩm, không phải danh sách)
         return View(hoaqua);
     }
-
-
-
 
     public IActionResult AddToCart(int id, int quantity)
     {
@@ -73,6 +68,8 @@ public class HoaquaController : Controller
                 cart.Add(new CartItem
                 {
                     Id = product.Id,
+                    HoaquaId = product.Id,
+                    Hoaqua = product,
                     Title = product.Title ?? "Chưa có tên", // Nếu Title null, gán giá trị mặc định
                     Genre = product.Genre ?? "Chưa có thể loại", // Nếu Genre null, gán giá trị mặc định
                     Price = product.Price > 0 ? product.Price : 0, // Nếu Price null hoặc < 0, gán giá trị mặc định
