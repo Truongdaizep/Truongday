@@ -20,15 +20,56 @@ namespace NETCORE.Areas.Admin.Controllers
         }
 
         // GET: Movies
-        public async Task<IActionResult> Index(int? pageNumber)
-        {
+     public async Task<IActionResult> Index(
+    string sortOrder,
+    string currentFilter,
+    string searchString,
+    int? pageNumber)
+{
+    ViewData["CurrentSort"] = sortOrder;
+    ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+    ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
+
+    if (searchString != null)
+    {
+        pageNumber = 1;
+    }
+    else
+    {
+        searchString = currentFilter;
+    }
+
+    ViewData["CurrentFilter"] = searchString;
+
+    var hoaquas = from s in _context.Hoaqua
+                   select s;
+    if (!String.IsNullOrEmpty(searchString))
+    {
+        hoaquas = hoaquas.Where(s => s.Title.Contains(searchString)
+                               || s.Genre.Contains(searchString));
+    }
+    switch (sortOrder)
+    {
+        case "name_desc":
+            hoaquas = hoaquas.OrderByDescending(s => s.Title);
+            break;
+        case "Date":
+            hoaquas = hoaquas.OrderBy(s => s.Genre);
+            break;
+        case "date_desc":
+            hoaquas = hoaquas.OrderByDescending(s => s.Genre);
+            break;
+        default:
+            hoaquas = hoaquas.OrderBy(s => s.Title);
+            break;
+    }
             int pageSize = 5; // Số lượng sản phẩm trên mỗi trang
 
-            // Lấy danh sách sản phẩm từ cơ sở dữ liệu
-            var hoaqua = _context.Hoaqua.AsQueryable();
+           
+       
 
             // Trả về danh sách được phân trang
-            return View(await PaginatedList<Hoaqua>.CreateAsync(hoaqua, pageNumber ?? 1, pageSize));
+            return View(await PaginatedList<Hoaqua>.CreateAsync(hoaquas, pageNumber ?? 1, pageSize));
         }
 
         // GET: Movies/Details/5
