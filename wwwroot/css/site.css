@@ -29,3 +29,17 @@ body {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
 }
+.back-to-list {
+  color: #007bff;  /* Màu chữ */
+  text-decoration: none;  /* Bỏ gạch dưới */
+  font-size: 16px;  /* Kích thước chữ */
+  padding: 8px 16px;  /* Khoảng cách xung quanh chữ */
+  background-color: #f0f0f0;  /* Màu nền */
+  border-radius: 4px;  /* Bo góc */
+  transition: background-color 0.3s ease, color 0.3s ease;  /* Hiệu ứng chuyển màu */
+}
+
+.back-to-list:hover {
+  background-color: #007bff;  /* Màu nền khi hover */
+  color: white;  /* Màu chữ khi hover */
+}
