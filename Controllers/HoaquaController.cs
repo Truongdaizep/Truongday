@@ -4,15 +4,16 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NETCORE.Models;
+using NETCORE.Data;
 
 namespace NETCORE.Controllers;
 
 public class HoaquaController : Controller
 {
     private const string CartSessionKey = "Cart";
-    private readonly MvcMovieContext _context;
+    private readonly ApplicationDbContext _context;
 
-    public HoaquaController(ILogger<HomeController> logger, MvcMovieContext context)
+    public HoaquaController(ILogger<HomeController> logger, ApplicationDbContext context)
     {
         _context = context;
 

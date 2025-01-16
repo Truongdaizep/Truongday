@@ -18,12 +18,11 @@ var services = builder.Services;
 var configuration = builder.Configuration;
 
 // Đăng ký DbContext với Entity Framework Core
-builder.Services.AddDbContext<MvcMovieContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("MvcMovieContext") ?? throw new InvalidOperationException("Connection string 'MvcMovieContext' not found.")));
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("MvcMovieContext")));
 // Đăng ký Identity
-
+builder.Services.AddScoped<DbInitializer>();
 builder.Services.AddSingleton<IEmailSender, EmailSenderService>();
 
 builder.Services.AddIdentity<User, Role>(options =>
@@ -83,6 +82,12 @@ builder.Services.AddControllersWithViews();
 // Tạo ứng dụng
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var dbInitializer = scope.ServiceProvider.GetRequiredService<DbInitializer>();
+    await dbInitializer.Seed();
+}
+
 // Sử dụng các phương thức cấu hình cho middleware
 if (!app.Environment.IsDevelopment())
 {
@@ -114,7 +119,7 @@ app.MapControllerRoute(
 app.MapRazorPages();
 
 app.Run();
- void AddScoped()
+void AddScoped()
 {
     // services.AddScoped<IUserClaimsPrincipalFactory<User>, CustomUserClaimsPrincipalFactory>();
 
@@ -137,7 +142,7 @@ app.Run();
     // services.AddTransient<ICloudStorageService, CloudStorageService>();
     // services.AddTransient<IFileValidator, FileValidator>();
     // services.AddHttpClient<FacebookService>();
-       services.AddControllersWithViews();
+    services.AddControllersWithViews();
 }
 void RouteRazerPage()
 {
@@ -174,6 +179,6 @@ void RouteRazerPage()
         options.Conventions.AddAreaPageRoute("Identity", "/Account/Manage/ShowRecoveryCodes", "manager/show-recovery-codes");
         options.Conventions.AddAreaPageRoute("Identity", "/Account/Manage/TwoFactorAuthentication", "manager/two-factor-authentication");
     });
-  
+
 
 }

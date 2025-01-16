@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Roles Page";
+    Layout ="_LayoutNull";
 }
 
 <h1>Role Index</h1>
@@ -32,7 +33,7 @@
                 <tr>
                     <td>@role.Name</td>
                     <td>
-                        <a asp-controller="Roles" asp-action="Edit" asp-route-id="@role.Id">Edit</a>
+                        <a asp-controller="Role" asp-action="Edit" asp-route-id="@role.Id">Edit</a>
                     </td>
                 </tr>
             }

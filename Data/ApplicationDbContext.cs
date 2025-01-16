@@ -1,7 +1,7 @@
 
 using System.Reflection;
 using NETCORE.Data.Entities;
-
+using NETCORE.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -51,10 +51,14 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, string>
 
         builder.Entity<Permission>()
                 .HasKey(c => new { c.RoleId, c.FunctionId, c.CommandId });
+        builder.Entity<Hoaqua>().ToTable("Hoaqua");
+        builder.Entity<CartItem>().ToTable("CartItem");
     }
     public DbSet<Command> Commands { set; get; } = default!;
     public DbSet<ActivityLog> ActivityLogs { set; get; } = default!;
     public DbSet<Function> Functions { set; get; } = default!;
     public DbSet<Permission> Permissions { set; get; } = default!;
     public DbSet<UserSetting> UserSettings { set; get; } = default!;
+    public DbSet<Hoaqua> Hoaqua { get; set; } = default!;
+    public DbSet<CartItem> CartItem { get; set; } = default!;
 }

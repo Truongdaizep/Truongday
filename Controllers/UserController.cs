@@ -53,7 +53,7 @@ public class UserController : Controller
     }
 
     [HttpPost]
-    [ClaimRequirement(FunctionCode.SYSTEM_USER, CommandCode.UPDATE)]
+    // [ClaimRequirement(FunctionCode.SYSTEM_USER, CommandCode.UPDATE)]
     public async Task<IActionResult> OnPostAsync(EditUserViewModel data)
     {
         var user = await _userRepository.GetUserByIdAsync(data.User!.Id);
@@ -63,7 +63,22 @@ public class UserController : Controller
         }
 
         var userRolesInDb = await _signInManager.UserManager.GetRolesAsync(user);
+        var currentUser = await _signInManager.UserManager.GetUserAsync(User);
 
+        // Kiểm tra nếu người dùng hiện tại là admin
+        bool isCurrentUserAdmin = currentUser != null && await _signInManager.UserManager.IsInRoleAsync(currentUser, "Administrator");
+
+        // Nếu người dùng hiện tại là admin, đảm bảo rằng họ không thể vô hiệu hóa quyền admin của mình
+        if (isCurrentUserAdmin)
+        {
+            // Nếu người dùng hiện tại đang cố gắng bỏ qua vai trò admin của mình, không cho phép thao tác
+            if (user.Id == currentUser.Id && !data.Roles.Any(r => r.Text == "Administrator" && r.Selected))
+            {
+                // Trả lại lỗi hoặc thông báo không cho phép bỏ quyền admin của chính mình
+                ModelState.AddModelError(string.Empty, "You cannot remove the 'Administrator' role from yourself.");
+                return View(data); // Trả lại view hiện tại với thông báo lỗi
+            }
+        }
         //Loop through the roles in ViewModel
         //Check if the Role is Assigned In DB
         //If Assigned -> Do Nothing

@@ -162,7 +162,7 @@ public class DbInitializer
             new Function { Id = "DASHBOARD", Name = "Dashboard", ParentId = null, SortOrder = 1, Url = "/dashboard", Icon = "bi bi-house-door" },
             new Function { Id = "SYSTEM", Name = "System", ParentId = null, Url = "/systems", Icon = "bi bi-gear" },
             new Function { Id = "SYSTEM_USER", Name = "User", ParentId = "SYSTEM", Url = "/systems/users", Icon = "bi bi-person" },
-            new Function { Id = "SYSTEM_ROLE", Name = "Role", ParentId = "SYSTEM", Url = "/systems/roles", Icon = "bi bi-shield-lock" },
+            new Function { Id = "SYSTEM_ROLE", Name = "Role", ParentId = "SYSTEM", Url = "/systems/role", Icon = "bi bi-shield-lock" },
             new Function { Id = "SYSTEM_FUNCTION", Name = "Function", ParentId = "SYSTEM", Url = "/systems/functions", Icon = "bi bi-list" },
             new Function { Id = "SYSTEM_PERMISSION", Name = "Permission", ParentId = "SYSTEM", Url = "/systems/permissions", Icon = "bi bi-lock" }
         };

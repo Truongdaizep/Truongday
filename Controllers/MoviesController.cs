@@ -6,67 +6,68 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using NETCORE.Models;
+using NETCORE.Data;
 
 namespace NETCORE.Areas.Admin.Controllers
 {
     [Area("Admin")]
     public class MoviesController : Controller
     {
-        private readonly MvcMovieContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public MoviesController(MvcMovieContext context)
+        public MoviesController(ApplicationDbContext context)
         {
             _context = context;
         }
 
         // GET: Movies
-     public async Task<IActionResult> Index(
-    string sortOrder,
-    string currentFilter,
-    string searchString,
-    int? pageNumber)
-{
-    ViewData["CurrentSort"] = sortOrder;
-    ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
-    ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
+        public async Task<IActionResult> Index(
+       string sortOrder,
+       string currentFilter,
+       string searchString,
+       int? pageNumber)
+        {
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
 
-    if (searchString != null)
-    {
-        pageNumber = 1;
-    }
-    else
-    {
-        searchString = currentFilter;
-    }
+            if (searchString != null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
 
-    ViewData["CurrentFilter"] = searchString;
+            ViewData["CurrentFilter"] = searchString;
 
-    var hoaquas = from s in _context.Hoaqua
-                   select s;
-    if (!String.IsNullOrEmpty(searchString))
-    {
-        hoaquas = hoaquas.Where(s => s.Title.Contains(searchString)
-                               || s.Genre.Contains(searchString));
-    }
-    switch (sortOrder)
-    {
-        case "name_desc":
-            hoaquas = hoaquas.OrderByDescending(s => s.Title);
-            break;
-        case "Date":
-            hoaquas = hoaquas.OrderBy(s => s.Genre);
-            break;
-        case "date_desc":
-            hoaquas = hoaquas.OrderByDescending(s => s.Genre);
-            break;
-        default:
-            hoaquas = hoaquas.OrderBy(s => s.Title);
-            break;
-    }
+            var hoaquas = from s in _context.Hoaqua
+                          select s;
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                hoaquas = hoaquas.Where(s => s.Title.Contains(searchString)
+                                       || s.Genre.Contains(searchString));
+            }
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    hoaquas = hoaquas.OrderByDescending(s => s.Title);
+                    break;
+                case "Date":
+                    hoaquas = hoaquas.OrderBy(s => s.Genre);
+                    break;
+                case "date_desc":
+                    hoaquas = hoaquas.OrderByDescending(s => s.Genre);
+                    break;
+                default:
+                    hoaquas = hoaquas.OrderBy(s => s.Title);
+                    break;
+            }
             int pageSize = 5; // Số lượng sản phẩm trên mỗi trang
 
-           
-       
+
+
 
             // Trả về danh sách được phân trang
             return View(await PaginatedList<Hoaqua>.CreateAsync(hoaquas, pageNumber ?? 1, pageSize));
@@ -163,7 +164,7 @@ namespace NETCORE.Areas.Admin.Controllers
             return View(hoaqua);
         }
 
-        
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Genre,Price,ImageUrl")] Hoaqua hoaqua, IFormFile ImageFile)

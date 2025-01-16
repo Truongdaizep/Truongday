@@ -75,12 +75,10 @@ namespace NETCORE.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProviderKey")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
@@ -117,12 +115,10 @@ namespace NETCORE.Migrations
                         .HasColumnType("varchar(50)");
 
                     b.Property<string>("LoginProvider")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
@@ -130,6 +126,48 @@ namespace NETCORE.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("UserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("NETCORE.Data.Entities.ActivityLog", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Action")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<string>("Content")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("EntityId")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<string>("EntityName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<DateTime?>("LastModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ActivityLogs");
                 });
 
             modelBuilder.Entity("NETCORE.Data.Entities.Catalog.Message", b =>
@@ -182,49 +220,7 @@ namespace NETCORE.Migrations
                     b.ToTable("Room");
                 });
 
-            modelBuilder.Entity("NETCORE.Data.Entities.Systems.ActivityLog", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Action")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<string>("Content")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<DateTime>("CreateDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("EntityId")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<string>("EntityName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<DateTime?>("LastModifiedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UserId")
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ActivityLogs");
-                });
-
-            modelBuilder.Entity("NETCORE.Data.Entities.Systems.Command", b =>
+            modelBuilder.Entity("NETCORE.Data.Entities.Command", b =>
                 {
                     b.Property<string>("Id")
                         .HasMaxLength(50)
@@ -240,7 +236,7 @@ namespace NETCORE.Migrations
                     b.ToTable("Commands");
                 });
 
-            modelBuilder.Entity("NETCORE.Data.Entities.Systems.Function", b =>
+            modelBuilder.Entity("NETCORE.Data.Entities.Function", b =>
                 {
                     b.Property<string>("Id")
                         .HasMaxLength(50)
@@ -272,7 +268,7 @@ namespace NETCORE.Migrations
                     b.ToTable("Functions");
                 });
 
-            modelBuilder.Entity("NETCORE.Data.Entities.Systems.Permission", b =>
+            modelBuilder.Entity("NETCORE.Data.Entities.Permission", b =>
                 {
                     b.Property<string>("RoleId")
                         .HasMaxLength(50)
@@ -295,7 +291,7 @@ namespace NETCORE.Migrations
                     b.ToTable("Permissions");
                 });
 
-            modelBuilder.Entity("NETCORE.Data.Entities.Systems.Role", b =>
+            modelBuilder.Entity("NETCORE.Data.Entities.Role", b =>
                 {
                     b.Property<string>("Id")
                         .HasMaxLength(50)
@@ -324,7 +320,7 @@ namespace NETCORE.Migrations
                     b.ToTable("Roles", (string)null);
                 });
 
-            modelBuilder.Entity("NETCORE.Data.Entities.Systems.User", b =>
+            modelBuilder.Entity("NETCORE.Data.Entities.User", b =>
                 {
                     b.Property<string>("Id")
                         .HasMaxLength(50)
@@ -433,7 +429,7 @@ namespace NETCORE.Migrations
                     b.ToTable("Users", (string)null);
                 });
 
-            modelBuilder.Entity("NETCORE.Data.Entities.Systems.UserSetting", b =>
+            modelBuilder.Entity("NETCORE.Data.Entities.UserSetting", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -475,9 +471,67 @@ namespace NETCORE.Migrations
                     b.ToTable("UserSettings");
                 });
 
+            modelBuilder.Entity("NETCORE.Models.CartItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Genre")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("HoaquaId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("HoaquaId");
+
+                    b.ToTable("CartItem", (string)null);
+                });
+
+            modelBuilder.Entity("NETCORE.Models.Hoaqua", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Genre")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Hoaqua", (string)null);
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
-                    b.HasOne("NETCORE.Data.Entities.Systems.Role", null)
+                    b.HasOne("NETCORE.Data.Entities.Role", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -486,7 +540,7 @@ namespace NETCORE.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("NETCORE.Data.Entities.Systems.User", null)
+                    b.HasOne("NETCORE.Data.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -495,7 +549,7 @@ namespace NETCORE.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("NETCORE.Data.Entities.Systems.User", null)
+                    b.HasOne("NETCORE.Data.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -504,13 +558,13 @@ namespace NETCORE.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
                 {
-                    b.HasOne("NETCORE.Data.Entities.Systems.Role", null)
+                    b.HasOne("NETCORE.Data.Entities.Role", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("NETCORE.Data.Entities.Systems.User", null)
+                    b.HasOne("NETCORE.Data.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -519,7 +573,7 @@ namespace NETCORE.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("NETCORE.Data.Entities.Systems.User", null)
+                    b.HasOne("NETCORE.Data.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -528,7 +582,7 @@ namespace NETCORE.Migrations
 
             modelBuilder.Entity("NETCORE.Data.Entities.Catalog.Message", b =>
                 {
-                    b.HasOne("NETCORE.Data.Entities.Systems.User", "FromUser")
+                    b.HasOne("NETCORE.Data.Entities.User", "FromUser")
                         .WithMany("Messages")
                         .HasForeignKey("FromUserId");
 
@@ -545,28 +599,28 @@ namespace NETCORE.Migrations
 
             modelBuilder.Entity("NETCORE.Data.Entities.Catalog.Room", b =>
                 {
-                    b.HasOne("NETCORE.Data.Entities.Systems.User", "Admin")
+                    b.HasOne("NETCORE.Data.Entities.User", "Admin")
                         .WithMany("Rooms")
                         .HasForeignKey("AdminId");
 
                     b.Navigation("Admin");
                 });
 
-            modelBuilder.Entity("NETCORE.Data.Entities.Systems.Permission", b =>
+            modelBuilder.Entity("NETCORE.Data.Entities.Permission", b =>
                 {
-                    b.HasOne("NETCORE.Data.Entities.Systems.Command", "Command")
+                    b.HasOne("NETCORE.Data.Entities.Command", "Command")
                         .WithMany("Permissions")
                         .HasForeignKey("CommandId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("NETCORE.Data.Entities.Systems.Function", "Function")
+                    b.HasOne("NETCORE.Data.Entities.Function", "Function")
                         .WithMany("Permissions")
                         .HasForeignKey("FunctionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("NETCORE.Data.Entities.Systems.Role", "Role")
+                    b.HasOne("NETCORE.Data.Entities.Role", "Role")
                         .WithMany("Permissions")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -579,13 +633,24 @@ namespace NETCORE.Migrations
                     b.Navigation("Role");
                 });
 
-            modelBuilder.Entity("NETCORE.Data.Entities.Systems.UserSetting", b =>
+            modelBuilder.Entity("NETCORE.Data.Entities.UserSetting", b =>
                 {
-                    b.HasOne("NETCORE.Data.Entities.Systems.User", "User")
+                    b.HasOne("NETCORE.Data.Entities.User", "User")
                         .WithOne("UserSetting")
-                        .HasForeignKey("NETCORE.Data.Entities.Systems.UserSetting", "UserId");
+                        .HasForeignKey("NETCORE.Data.Entities.UserSetting", "UserId");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("NETCORE.Models.CartItem", b =>
+                {
+                    b.HasOne("NETCORE.Models.Hoaqua", "Hoaqua")
+                        .WithMany()
+                        .HasForeignKey("HoaquaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Hoaqua");
                 });
 
             modelBuilder.Entity("NETCORE.Data.Entities.Catalog.Room", b =>
@@ -593,22 +658,22 @@ namespace NETCORE.Migrations
                     b.Navigation("Messages");
                 });
 
-            modelBuilder.Entity("NETCORE.Data.Entities.Systems.Command", b =>
+            modelBuilder.Entity("NETCORE.Data.Entities.Command", b =>
                 {
                     b.Navigation("Permissions");
                 });
 
-            modelBuilder.Entity("NETCORE.Data.Entities.Systems.Function", b =>
+            modelBuilder.Entity("NETCORE.Data.Entities.Function", b =>
                 {
                     b.Navigation("Permissions");
                 });
 
-            modelBuilder.Entity("NETCORE.Data.Entities.Systems.Role", b =>
+            modelBuilder.Entity("NETCORE.Data.Entities.Role", b =>
                 {
                     b.Navigation("Permissions");
                 });
 
-            modelBuilder.Entity("NETCORE.Data.Entities.Systems.User", b =>
+            modelBuilder.Entity("NETCORE.Data.Entities.User", b =>
                 {
                     b.Navigation("Messages");
 

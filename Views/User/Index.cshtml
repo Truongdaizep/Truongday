@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Index";
+    Layout = "_LayoutNull";
 }
 
 <h1>User Index</h1>
@@ -20,14 +21,14 @@
 @if (@Model.Items != null && @Model.Items.Any())
 {
     <table class="table">
-    <thead>
-        <tr>
-            <th>Email</th>
-            <th>Edit</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var user in Model.Items)
+        <thead>
+            <tr>
+                <th>Email</th>
+                <th>Edit</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model.Items)
             {
                 <tr>
                     <td>@user.Email</td>
