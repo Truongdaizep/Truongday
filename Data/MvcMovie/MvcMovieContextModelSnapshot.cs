@@ -2,19 +2,16 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace NETCORE.Migrations
+namespace NETCORE.Migrations.MvcMovie
 {
     [DbContext(typeof(MvcMovieContext))]
-    [Migration("20250109152557_InitialCreate")]
-    partial class InitialCreate
+    partial class MvcMovieContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -84,17 +81,12 @@ namespace NETCORE.Migrations
             modelBuilder.Entity("NETCORE.Models.CartItem", b =>
                 {
                     b.HasOne("NETCORE.Models.Hoaqua", "Hoaqua")
-                        .WithMany("CartItem")
+                        .WithMany()
                         .HasForeignKey("HoaquaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Hoaqua");
-                });
-
-            modelBuilder.Entity("NETCORE.Models.Hoaqua", b =>
-                {
-                    b.Navigation("CartItem");
                 });
 #pragma warning restore 612, 618
         }

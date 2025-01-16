@@ -4,8 +4,18 @@ using NETCORE.Services;
 using NETCORE.Utils.ConfigOptions;
 using Microsoft.AspNetCore.Identity;
 using NETCORE.Data;
+using NETCORE.Data.Entities;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using NETCORE.Utils.ConfigOptions.Email;
+using NETCORE.Repositories;
+using static Google.Apis.Auth.OAuth2.ComputeCredential;
+
+
+
 
 var builder = WebApplication.CreateBuilder(args);
+var services = builder.Services;
+var configuration = builder.Configuration;
 
 // Đăng ký DbContext với Entity Framework Core
 builder.Services.AddDbContext<MvcMovieContext>(options =>
@@ -13,9 +23,15 @@ builder.Services.AddDbContext<MvcMovieContext>(options =>
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("MvcMovieContext")));
 // Đăng ký Identity
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<ApplicationDbContext>();
 
+builder.Services.AddSingleton<IEmailSender, EmailSenderService>();
+
+builder.Services.AddIdentity<User, Role>(options =>
+    options.SignIn.RequireConfirmedAccount = false)
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders();
+
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 // Đăng ký các dịch vụ tùy chỉnh
 builder.Services.AddSingleton<IVnPayService, VnPayService>();
 builder.Services.AddSingleton<ICloudStorageService, CloudStorageService>();
@@ -27,7 +43,7 @@ builder.Services.Configure<VnPayConfigOptions>(builder.Configuration.GetSection(
 // Cấu hình Session
 builder.Services.AddSession(options =>
 {
-    options.Cookie.Name = ".YourApp.Session";
+    options.Cookie.Name = ".NETCORE.Session";
     options.IdleTimeout = TimeSpan.FromMinutes(30);
     options.Cookie.IsEssential = true;
 });
@@ -59,6 +75,8 @@ builder.Services.ConfigureApplicationCookie(options =>
 });
 
 // Thêm các dịch vụ Razor Pages và MVC
+RouteRazerPage();
+AddScoped();
 builder.Services.AddRazorPages();
 builder.Services.AddControllersWithViews();
 
@@ -74,11 +92,13 @@ if (!app.Environment.IsDevelopment())
         app.UseHsts();
     }
 }
+app.UseAuthentication();
 
 app.UseHttpsRedirection();
 app.UseRouting();
 app.UseStaticFiles();
 app.UseAuthorization();
+
 app.UseSession();
 
 // Định tuyến các controller và page
@@ -90,6 +110,70 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+
 app.MapRazorPages();
 
 app.Run();
+ void AddScoped()
+{
+    // services.AddScoped<IUserClaimsPrincipalFactory<User>, CustomUserClaimsPrincipalFactory>();
+
+    services.AddTransient<Initializer>();
+    services.AddTransient<UnitOfWork>();
+    services.AddTransient<IUserRepository, UserRepository>();
+    services.AddScoped<IRoleRepository, RoleRepository>();
+    services.AddScoped<IPermissionRepository, PermissionRepository>();
+    services.AddScoped<IFunctionRepository, FunctionRepository>();
+    services.AddScoped<IUserSettingRepository, UserSettingRepository>();
+
+    services.AddTransient<IEmailSender, EmailSenderService>();
+    // services.AddTransient<IVNPayService, VNPayService>();
+    // services.AddTransient<IStorageService, FileStorageService>();
+    // services.Configure<GoogleCloudStorageSettings>(configuration.GetSection("GoogleCloudStorageSettings"));
+    // services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
+    // services.Configure<VNPayConfigOptions>(builder.Configuration.GetSection("VnPay"));
+    // services.AddTransient<IViewRenderService, ViewRenderService>();
+    // services.AddTransient<ICacheService, DistributedCacheService>();
+    // services.AddTransient<ICloudStorageService, CloudStorageService>();
+    // services.AddTransient<IFileValidator, FileValidator>();
+    // services.AddHttpClient<FacebookService>();
+       services.AddControllersWithViews();
+}
+void RouteRazerPage()
+{
+    services.ConfigureApplicationCookie(options =>
+    {
+        options.LoginPath = "/login";
+        options.LogoutPath = "/logout";
+        options.AccessDeniedPath = "/access-denied";
+    });
+    services.AddRazorPages(options =>
+    {
+        options.Conventions.AddAreaPageRoute("Identity", "/Account/Login", "login");
+        options.Conventions.AddAreaPageRoute("Identity", "/Account/Logout", "logout");
+        options.Conventions.AddAreaPageRoute("Identity", "/Account/AccessDenied", "access-denied");
+        options.Conventions.AddAreaPageRoute("Identity", "/Account/Register", "register");
+        options.Conventions.AddAreaPageRoute("Identity", "/Account/ForgotPassword", "forgot-password");
+        options.Conventions.AddAreaPageRoute("Identity", "/Account/ResetPassword", "reset-password");
+        options.Conventions.AddAreaPageRoute("Identity", "/Account/ConfirmEmail", "confirm-email");
+        options.Conventions.AddAreaPageRoute("Identity", "/Account/ResetPasswordConfirmation", "reset-password-confirmation");
+        options.Conventions.AddAreaPageRoute("Identity", "/Account/LogoutConfirmation", "logout-confirmation");
+
+        options.Conventions.AddAreaPageRoute("Identity", "/Account/Manage/ChangePassword", "manager/change-password");
+        options.Conventions.AddAreaPageRoute("Identity", "/Account/Manage/DeletePersonalData", "manager/delete-personal-data");
+        options.Conventions.AddAreaPageRoute("Identity", "/Account/Manage/Disable2fa", "manager/disable2fa");
+        options.Conventions.AddAreaPageRoute("Identity", "/Account/Manage/DownloadPersonalData", "manager/download-personal-data");
+        options.Conventions.AddAreaPageRoute("Identity", "/Account/Manage/Email", "manager/email");
+        options.Conventions.AddAreaPageRoute("Identity", "/Account/Manage/EnableAuthenticator", "manager/enable-authenticator");
+        options.Conventions.AddAreaPageRoute("Identity", "/Account/Manage/ExternalLogins", "manager/external-logins");
+        options.Conventions.AddAreaPageRoute("Identity", "/Account/Manage/GenerateRecoveryCodes", "manager/generate-recovery-codes");
+        options.Conventions.AddAreaPageRoute("Identity", "/Account/Manage/Index", "manager");
+        options.Conventions.AddAreaPageRoute("Identity", "/Account/Manage/PersonalData", "manager/personal-data");
+        options.Conventions.AddAreaPageRoute("Identity", "/Account/Manage/ResetAuthenticator", "manager/reset-authenticator");
+        options.Conventions.AddAreaPageRoute("Identity", "/Account/Manage/SetPassword", "manager/set-password");
+        options.Conventions.AddAreaPageRoute("Identity", "/Account/Manage/ShowRecoveryCodes", "manager/show-recovery-codes");
+        options.Conventions.AddAreaPageRoute("Identity", "/Account/Manage/TwoFactorAuthentication", "manager/two-factor-authentication");
+    });
+  
+
+}

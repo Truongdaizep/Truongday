@@ -2,6 +2,7 @@ using NETCORE.Models;
 using NETCORE.Services;
 using Microsoft.AspNetCore.Mvc;
 
+
 namespace NETCORE.Controllers
 {
     public class PaysController : Controller
@@ -63,6 +64,7 @@ namespace NETCORE.Controllers
 
         public IActionResult PaymentSuccess()
         {
+            ViewData["PaymentSuccessMessage"] = "Payment completed successfully!";
             return View();
         }
 

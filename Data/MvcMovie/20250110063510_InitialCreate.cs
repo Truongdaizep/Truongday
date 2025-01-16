@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace NETCORE.Migrations
+namespace NETCORE.Migrations.MvcMovie
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration

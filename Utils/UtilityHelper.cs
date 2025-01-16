@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Security.Cryptography;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace NETCORE.Utils
 {
@@ -65,9 +66,17 @@ namespace NETCORE.Utils
 
         public static string? GenerateFileNameToSave(string incomingFileName)
         {
-            var fileName = Path.GetFileNameWithoutExtension(incomingFileName);
+            // var fileName = Path.GetFileNameWithoutExtension(incomingFileName);
             var extension = Path.GetExtension(incomingFileName);
             return $"{DateTime.Now.ToUniversalTime().ToString("yyyyMMddHHmmss")}{extension}";
+        }
+
+        public static string? GetRolesInClaim(string? claimJson)
+        {
+            if (string.IsNullOrEmpty(claimJson)) return null;
+            var roles = JsonConvert.DeserializeObject<string[]>(claimJson);
+            if (roles == null) return null;
+            return string.Join(", ", roles);
         }
     }
 }
